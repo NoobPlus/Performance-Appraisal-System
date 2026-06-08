@@ -1,0 +1,552 @@
+{
+  "communities": {
+    "0": [
+      "api_auth",
+      "api_auth_getuserinfo",
+      "api_auth_login",
+      "api_auth_logout",
+      "api_dashboard",
+      "api_dashboard_getdashboardoverview",
+      "api_employees",
+      "api_employees_getemployees",
+      "api_employees_getsubordinates",
+      "api_employees_syncdepartments",
+      "api_employees_syncemployees",
+      "api_request",
+      "api_request_request",
+      "api_templates",
+      "api_templates_createtemplate",
+      "api_templates_deletetemplate",
+      "api_templates_gettemplates",
+      "api_templates_updatetemplate",
+      "router_index",
+      "router_index_router",
+      "router_index_routes",
+      "src_app",
+      "src_app_router",
+      "src_app_userstore",
+      "src_main",
+      "src_main_app",
+      "stores_user",
+      "stores_user_useuserstore",
+      "utils_auth",
+      "utils_auth_gettoken",
+      "utils_auth_redirecttologin",
+      "utils_auth_removetoken",
+      "utils_auth_settoken",
+      "views_login",
+      "views_login_handlelogin",
+      "views_login_loading",
+      "views_login_route",
+      "views_login_router",
+      "views_login_userstore"
+    ],
+    "1": [
+      "api_evaluation",
+      "api_evaluation_getevallogs",
+      "api_evaluation_getevalrecord",
+      "api_evaluation_getmyassessments",
+      "api_evaluation_submithrfinal",
+      "api_evaluation_submitmanagereval",
+      "api_evaluation_submitselfeval",
+      "api_evaluation_submitvpapprove",
+      "employee_history",
+      "employee_history_alldata",
+      "employee_history_fetchdata",
+      "employee_history_finished",
+      "employee_history_list",
+      "employee_history_listloading",
+      "employee_history_loadmore",
+      "employee_history_onrefresh",
+      "employee_history_refreshing",
+      "manager_managereval",
+      "manager_managereval_action",
+      "manager_managereval_detail",
+      "manager_managereval_dimensions",
+      "manager_managereval_handlesubmit",
+      "manager_managereval_loading",
+      "manager_managereval_overallcomment",
+      "manager_managereval_recordid",
+      "manager_managereval_returncomment",
+      "manager_managereval_route",
+      "manager_managereval_router",
+      "manager_managereval_selfevals",
+      "manager_managereval_submitting"
+    ],
+    "2": [
+      "app_database",
+      "app_database_base",
+      "app_database_get_db",
+      "backend_app_database_py_session",
+      "backend_app_services_sync_py_session",
+      "declarativebase",
+      "models_init",
+      "models_init_approvalaction",
+      "models_init_assessmentplan",
+      "models_init_assessmentrecord",
+      "models_init_department",
+      "models_init_employee",
+      "models_init_employeestatus",
+      "models_init_evaltemplate",
+      "models_init_planstatus",
+      "models_init_recordstatus",
+      "services_sync",
+      "services_sync_rationale_1",
+      "services_sync_rationale_187",
+      "services_sync_rationale_209",
+      "services_sync_rationale_22",
+      "services_sync_rationale_95",
+      "services_sync_run_full_sync",
+      "services_sync_syncservice",
+      "services_sync_syncservice_sync_all_employees",
+      "services_sync_syncservice_sync_departments",
+      "services_sync_syncservice_sync_employees_in_department",
+      "services_sync_syncservice_update_leader_relationships",
+      "str"
+    ],
+    "3": [
+      "app_permissions_role",
+      "backend_app_routers_auth_py_session",
+      "backend_app_routers_evaluation_py_session",
+      "backend_app_routers_evaluation_py_userinfo",
+      "basemodel",
+      "models_init_approvallog",
+      "models_init_evaldetail",
+      "request",
+      "routers_auth",
+      "routers_auth_build_oauth_url",
+      "routers_auth_callback",
+      "routers_auth_create_session",
+      "routers_auth_get_current_user",
+      "routers_auth_get_login_user",
+      "routers_auth_get_me",
+      "routers_auth_login",
+      "routers_auth_logout",
+      "routers_auth_userinfo",
+      "routers_evaluation",
+      "routers_evaluation_get_approval_logs",
+      "routers_evaluation_get_eval_detail",
+      "routers_evaluation_hr_final",
+      "routers_evaluation_hrfinalsubmit",
+      "routers_evaluation_managerevalsubmit",
+      "routers_evaluation_rationale_111",
+      "routers_evaluation_selfevalsubmit",
+      "routers_evaluation_submit_manager_eval",
+      "routers_evaluation_submit_self_eval"
+    ],
+    "4": [
+      "api_plans",
+      "api_plans_createplan",
+      "api_plans_getcurrentstage",
+      "api_plans_getplans",
+      "hr_dataexport",
+      "hr_dataexport_deptcolumns",
+      "hr_dataexport_depts",
+      "hr_dataexport_exportfields",
+      "hr_dataexport_exportformat",
+      "hr_dataexport_exporting",
+      "hr_dataexport_handleexport",
+      "hr_dataexport_loadpreview",
+      "hr_dataexport_ondeptconfirm",
+      "hr_dataexport_onplanconfirm",
+      "hr_dataexport_plancolumns",
+      "hr_dataexport_plans",
+      "hr_dataexport_previewdata",
+      "hr_dataexport_selecteddeptid",
+      "hr_dataexport_selecteddeptname",
+      "hr_dataexport_selectedplanid",
+      "hr_dataexport_selectedplanname",
+      "hr_dataexport_showdeptpicker",
+      "hr_dataexport_showplanpicker",
+      "hr_dataexport_togglecheck"
+    ],
+    "5": [
+      "frontend_package",
+      "frontend_package_dependencies",
+      "frontend_package_dependencies_axios",
+      "frontend_package_dependencies_pinia",
+      "frontend_package_dependencies_vant",
+      "frontend_package_dependencies_vue",
+      "frontend_package_dependencies_vue_router",
+      "frontend_package_devdependencies",
+      "frontend_package_devdependencies_unplugin_auto_import",
+      "frontend_package_devdependencies_unplugin_vue_components",
+      "frontend_package_devdependencies_vant_auto_import_resolver",
+      "frontend_package_devdependencies_vite",
+      "frontend_package_devdependencies_vitejs_plugin_vue",
+      "frontend_package_name",
+      "frontend_package_private",
+      "frontend_package_scripts",
+      "frontend_package_scripts_build",
+      "frontend_package_scripts_dev",
+      "frontend_package_scripts_preview",
+      "frontend_package_type",
+      "frontend_package_version"
+    ],
+    "6": [
+      "app_config",
+      "app_config_config",
+      "app_config_get_settings",
+      "app_config_settings",
+      "basesettings",
+      "services_wecom",
+      "services_wecom_rationale_18",
+      "services_wecom_rationale_40",
+      "services_wecom_rationale_77",
+      "services_wecom_rationale_92",
+      "services_wecom_wecomservice",
+      "services_wecom_wecomservice_get_access_token",
+      "services_wecom_wecomservice_get_department_list",
+      "services_wecom_wecomservice_get_department_users",
+      "services_wecom_wecomservice_get_employee_detail",
+      "services_wecom_wecomservice_get_user_info_by_code",
+      "services_wecom_wecomservice_init",
+      "services_wecom_wecomservice_send_app_message",
+      "services_wecom_wecomservice_send_textcard"
+    ],
+    "7": [
+      "app_permissions",
+      "app_permissions_get_current_user_with_role",
+      "app_permissions_get_user_role",
+      "app_permissions_rationale_106",
+      "app_permissions_rationale_29",
+      "app_permissions_rationale_55",
+      "app_permissions_require_admin",
+      "app_permissions_require_admin_user",
+      "app_permissions_require_hr",
+      "app_permissions_require_hr_user",
+      "app_permissions_require_manager",
+      "app_permissions_require_manager_user",
+      "app_permissions_require_role",
+      "backend_app_permissions_py_session",
+      "backend_app_permissions_py_userinfo"
+    ],
+    "8": [
+      "backend_app_routers_admin_py_session",
+      "backend_app_routers_admin_py_userinfo",
+      "backgroundtasks",
+      "routers_admin",
+      "routers_admin_get_sync_status",
+      "routers_admin_rationale_1",
+      "routers_admin_rationale_21",
+      "routers_admin_rationale_35",
+      "routers_admin_rationale_50",
+      "routers_admin_rationale_63",
+      "routers_admin_rationale_76",
+      "routers_admin_sync_all_employees",
+      "routers_admin_sync_department_employees",
+      "routers_admin_sync_departments",
+      "routers_admin_update_leader_relationships"
+    ],
+    "9": [
+      "graphify_detect",
+      "graphify_detect_files",
+      "graphify_detect_files_code",
+      "graphify_detect_files_document",
+      "graphify_detect_files_image",
+      "graphify_detect_files_paper",
+      "graphify_detect_files_video",
+      "graphify_detect_graphifyignore_patterns",
+      "graphify_detect_needs_graph",
+      "graphify_detect_scan_root",
+      "graphify_detect_skipped_sensitive",
+      "graphify_detect_total_files",
+      "graphify_detect_total_words",
+      "graphify_detect_warning"
+    ],
+    "10": [
+      "backend_app_routers_plans_py_session",
+      "backend_app_routers_plans_py_userinfo",
+      "routers_plans",
+      "routers_plans_create_plan",
+      "routers_plans_create_template",
+      "routers_plans_dashboard_overview",
+      "routers_plans_list_plans",
+      "routers_plans_list_templates",
+      "routers_plans_my_assessments",
+      "routers_plans_plancreate",
+      "routers_plans_templatecreate"
+    ],
+    "11": [
+      "backend_app_services_export_py_session",
+      "bytesio",
+      "services_export",
+      "services_export_exportservice",
+      "services_export_exportservice_apply_cell_style",
+      "services_export_exportservice_apply_header_style",
+      "services_export_exportservice_auto_adjust_column_width",
+      "services_export_exportservice_export_assessment_detail",
+      "services_export_exportservice_export_assessment_records",
+      "services_export_exportservice_export_plan_summary",
+      "services_export_rationale_1"
+    ],
+    "12": [
+      "backend_app_routers_hr_py_session",
+      "backend_app_routers_hr_py_userinfo",
+      "routers_hr",
+      "routers_hr_dashboard_detail",
+      "routers_hr_export_data",
+      "routers_hr_export_preview",
+      "routers_hr_hr_pending_reviews",
+      "routers_hr_manager_pending_evals",
+      "routers_hr_vp_approve",
+      "routers_hr_vpapprovebody"
+    ],
+    "13": [
+      "employee_resultview",
+      "employee_resultview_detail",
+      "employee_resultview_formattime",
+      "employee_resultview_getactiontext",
+      "employee_resultview_getrolelabel",
+      "employee_resultview_loading",
+      "employee_resultview_logs",
+      "employee_resultview_recordid",
+      "employee_resultview_rolemap",
+      "employee_resultview_route"
+    ],
+    "14": [
+      "backend_app_routers_export_py_session",
+      "backend_app_routers_export_py_userinfo",
+      "routers_export",
+      "routers_export_export_plan_summary",
+      "routers_export_export_record_detail",
+      "routers_export_export_records",
+      "routers_export_rationale_23",
+      "routers_export_rationale_46",
+      "routers_export_rationale_71"
+    ],
+    "15": [
+      "backend_app_routers_employees_py_session",
+      "backend_app_routers_employees_py_userinfo",
+      "routers_employees",
+      "routers_employees_list_departments",
+      "routers_employees_list_employees",
+      "routers_employees_list_subordinates",
+      "routers_employees_sync_departments",
+      "routers_employees_sync_employees"
+    ],
+    "16": [
+      "manager_subordinatelist",
+      "manager_subordinatelist_employees",
+      "manager_subordinatelist_filteredemployees",
+      "manager_subordinatelist_godetail",
+      "manager_subordinatelist_keyword",
+      "manager_subordinatelist_loading",
+      "manager_subordinatelist_router"
+    ],
+    "17": [
+      "alembic_env",
+      "alembic_env_do_run_migrations",
+      "alembic_env_rationale_23",
+      "alembic_env_rationale_42",
+      "alembic_env_run_migrations_offline",
+      "alembic_env_run_migrations_online"
+    ],
+    "18": [
+      "app_main",
+      "app_main_find_free_port",
+      "app_main_health",
+      "app_main_startup"
+    ],
+    "19": [
+      "routers_pages",
+      "routers_pages_health_check",
+      "routers_pages_serve_index"
+    ],
+    "20": [
+      "utils_wecom",
+      "utils_wecom_initwxconfig",
+      "utils_wecom_loadwxscript"
+    ],
+    "21": [
+      "hr_hrreview",
+      "hr_hrreview_if"
+    ],
+    "22": [
+      "stores_app",
+      "stores_app_useappstore"
+    ],
+    "23": [
+      "admin_orgsync"
+    ],
+    "24": [
+      "app_init"
+    ],
+    "25": [
+      "employee_assessmentlist"
+    ],
+    "26": [
+      "employee_selfeval"
+    ],
+    "27": [
+      "frontend_vite_config"
+    ],
+    "28": [
+      "hr_dashboard"
+    ],
+    "29": [
+      "hr_templatemanage"
+    ],
+    "30": [
+      "manager_approvallist"
+    ],
+    "31": [
+      "manager_planmanage"
+    ],
+    "32": [
+      "routers_init"
+    ],
+    "33": [
+      "services_init"
+    ],
+    "34": [
+      "views_home"
+    ]
+  },
+  "cohesion": {
+    "0": 1.3846153846153846,
+    "1": 1.1666666666666667,
+    "2": 1.6896551724137931,
+    "3": 2.3214285714285716,
+    "4": 1.0416666666666667,
+    "5": 0.9523809523809523,
+    "6": 1.3157894736842106,
+    "7": 1.9333333333333333,
+    "8": 1.4666666666666666,
+    "9": 0.9285714285714286,
+    "10": 1.9090909090909092,
+    "11": 2.090909090909091,
+    "12": 2.0,
+    "13": 0.9,
+    "14": 1.3333333333333333,
+    "15": 1.875,
+    "16": 0.8571428571428571,
+    "17": 1.0,
+    "18": 0.75,
+    "19": 0.6666666666666666,
+    "20": 1.0,
+    "21": 0.5,
+    "22": 0.5,
+    "23": 0.0,
+    "24": 0.0,
+    "25": 0.0,
+    "26": 0.0,
+    "27": 0.0,
+    "28": 0.0,
+    "29": 0.0,
+    "30": 0.0,
+    "31": 0.0,
+    "32": 0.0,
+    "33": 0.0,
+    "34": 0.0
+  },
+  "gods": [
+    {
+      "id": "routers_auth_userinfo",
+      "label": "UserInfo",
+      "degree": 29
+    },
+    {
+      "id": "app_database_base",
+      "label": "Base",
+      "degree": 13
+    },
+    {
+      "id": "app_permissions_get_user_role",
+      "label": "get_user_role()",
+      "degree": 10
+    },
+    {
+      "id": "services_wecom_wecomservice",
+      "label": "WeComService",
+      "degree": 9
+    },
+    {
+      "id": "app_permissions_role",
+      "label": "Role",
+      "degree": 7
+    },
+    {
+      "id": "routers_auth_callback",
+      "label": "callback()",
+      "degree": 7
+    },
+    {
+      "id": "backend_app_routers_evaluation_py_userinfo",
+      "label": "UserInfo",
+      "degree": 7
+    },
+    {
+      "id": "backend_app_routers_evaluation_py_session",
+      "label": "Session",
+      "degree": 7
+    },
+    {
+      "id": "backend_app_routers_hr_py_userinfo",
+      "label": "UserInfo",
+      "degree": 7
+    },
+    {
+      "id": "backend_app_routers_hr_py_session",
+      "label": "Session",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "BackgroundTasks",
+      "target": "UserInfo",
+      "source_files": [
+        "backend/app/routers/admin.py",
+        "backend/app/routers/auth.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `BackgroundTasks` unexpectedly reaches hub `UserInfo`"
+    },
+    {
+      "source": "ApprovalLog",
+      "target": "Base",
+      "source_files": [
+        "backend/app/models/__init__.py",
+        "backend/app/database.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "EvalDetail",
+      "target": "Base",
+      "source_files": [
+        "backend/app/models/__init__.py",
+        "backend/app/database.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "callback()",
+      "target": "Department",
+      "source_files": [
+        "backend/app/routers/auth.py",
+        "backend/app/models/__init__.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "sync_departments()",
+      "target": "Department",
+      "source_files": [
+        "backend/app/routers/employees.py",
+        "backend/app/models/__init__.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    }
+  ]
+}
