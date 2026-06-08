@@ -1,7 +1,0 @@
-D:\Performance-Appraisal-System\frontend\src\views\manager\SubordinateList.vue
-D:\Performance-Appraisal-System\frontend\vite.config.js
-D:\Performance-Appraisal-System\README.md
-D:\Performance-Appraisal-System\backend\app\welcome.html
-D:\Performance-Appraisal-System\backend\requirements.txt
-D:\Performance-Appraisal-System\frontend\index.html
-D:\Performance-Appraisal-System\performance-system-design.txt
