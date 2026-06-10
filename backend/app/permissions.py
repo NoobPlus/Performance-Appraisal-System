@@ -161,6 +161,14 @@ async def require_hr_user(
     return user
 
 
+async def require_any_user(
+    user: UserInfo = Depends(get_login_user),
+    db: Session = Depends(get_db)
+) -> UserInfo:
+    """仅验证登录，不限制角色"""
+    return user
+
+
 async def require_manager_user(
     user: UserInfo = Depends(get_login_user),
     db: Session = Depends(get_db)

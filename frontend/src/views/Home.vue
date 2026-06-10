@@ -30,6 +30,10 @@
           <div class="quick-icon">📅</div>
           <span>历史记录</span>
         </div>
+        <div class="quick-item" @click="$router.push('/employee/templates')">
+          <div class="quick-icon">📝</div>
+          <span>我的模板</span>
+        </div>
         <div class="quick-item" v-if="userStore.isManager || userStore.isAdmin" @click="$router.push('/manager/approvals')">
           <div class="quick-icon">✅</div>
           <span>待审批</span>
@@ -145,7 +149,6 @@ const menuActions = computed(() => {
   }
   if (userStore.isHR || userStore.isAdmin) {
     actions.push(
-      { name: '模板管理', path: '/hr/templates' },
       { name: 'HR终审', path: '/hr/review' },
       { name: '数据概览', path: '/hr/dashboard' },
       { name: '数据导出', path: '/hr/export' }
@@ -153,6 +156,7 @@ const menuActions = computed(() => {
   }
   if (userStore.isAdmin) {
     actions.push(
+      { name: '模板管理', path: '/hr/templates' },
       { name: '组织架构同步', path: '/admin/org-sync' }
     )
   }

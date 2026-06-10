@@ -37,6 +37,9 @@ settings = get_settings()
 class SelfEvalSubmit(BaseModel):
     record_id: int
     scores: list[dict]
+    source: str = "custom"  # "custom" or "template"
+    template_id: Optional[int] = None
+    dimensions: Optional[list[dict]] = None
 
 
 @router.post("/self")
@@ -47,6 +50,24 @@ async def submit_self_eval(body: SelfEvalSubmit, user: UserInfo = Depends(get_lo
         raise HTTPException(404, "考核记录不存在")
     if record.status not in (RecordStatus.PENDING.value, RecordStatus.RETURNED.value):
         raise HTTPException(400, f"当前状态不允许自评: {record.status}")
+
+    # 确定维度配置（支持自主创建或选用个人模板）
+    if body.source == "template" and body.template_id:
+        template = db.execute(select(EvalTemplate).where(EvalTemplate.id == body.template_id)).scalar_one_or_none()
+        if not template:
+            raise HTTPException(404, "模板不存在")
+        if template.created_by != user.id:
+            raise HTTPException(403, "无权使用他人模板")
+        # 从模板复制维度配置到 scores（如果scores未提供维度信息）
+        if not any("dimension_name" in s for s in body.scores):
+            body.scores = [{"dimension_name": d["name"], "weight": d.get("weight", 0), "type": d.get("type", "custom"), "score": s.get("score", 0), "comment": s.get("comment", "")} for d, s in zip(template.dimensions_json, body.scores)]
+    elif body.source == "custom" and body.dimensions and not any("dimension_name" in s for s in body.scores):
+        body.scores = [{"dimension_name": d["name"], "weight": d.get("weight", 0), "type": d.get("type", "custom"), "score": s.get("score", 0), "comment": s.get("comment", "")} for d, s in zip(body.dimensions, body.scores)]
+
+    # 清除已有的 EvalDetail（退回重评场景）
+    existing = db.execute(select(EvalDetail).where(EvalDetail.record_id == record.id)).scalars().all()
+    for e in existing:
+        db.delete(e)
 
     for item in body.scores:
         detail = EvalDetail(

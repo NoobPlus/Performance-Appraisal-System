@@ -39,10 +39,16 @@ const routes = [
     meta: { title: '历史记录' }
   },
   {
+    path: '/employee/templates',
+    name: 'MyTemplates',
+    component: () => import('../views/employee/MyTemplates.vue'),
+    meta: { title: '我的模板' }
+  },
+  {
     path: '/manager/plans',
     name: 'PlanManage',
     component: () => import('../views/manager/PlanManage.vue'),
-    meta: { title: '考核计划', roles: ['admin', 'manager'] }
+    meta: { title: '考核计划', roles: ['admin'] }
   },
   {
     path: '/manager/approvals',
@@ -66,7 +72,7 @@ const routes = [
     path: '/hr/templates',
     name: 'TemplateManage',
     component: () => import('../views/hr/TemplateManage.vue'),
-    meta: { title: '模板管理', roles: ['admin', 'hr'] }
+    meta: { title: '模板管理', roles: ['admin'] }
   },
   {
     path: '/hr/review',

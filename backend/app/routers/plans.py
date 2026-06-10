@@ -8,7 +8,7 @@ import asyncio
 from app.database import get_db
 from app.models import Employee, Department, AssessmentPlan, AssessmentRecord, EvalTemplate, RecordStatus
 from app.routers.auth import UserInfo, get_login_user
-from app.permissions import require_hr_user, require_admin_user
+from app.permissions import require_hr_user, require_admin_user, require_any_user
 from app.services.wecom import wecom_service
 from app.config import get_settings
 
@@ -27,7 +27,6 @@ class PlanCreate(BaseModel):
     self_eval_start: Optional[str] = None
     self_eval_end: Optional[str] = None
     manager_eval_end: Optional[str] = None
-    template_id: int
     approval_chain: list[str]
     dept_ids: Optional[list[int]] = None
 
@@ -66,13 +65,13 @@ def list_plans(user: UserInfo = Depends(get_login_user), db: Session = Depends(g
 
 
 @router.post("/plans")
-async def create_plan(body: PlanCreate, user: UserInfo = Depends(require_hr_user), db: Session = Depends(get_db)):
+async def create_plan(body: PlanCreate, user: UserInfo = Depends(require_admin_user), db: Session = Depends(get_db)):
     plan = AssessmentPlan(
         name=body.name, cycle_type=body.cycle_type,
         start_date=body.start_date, end_date=body.end_date,
         self_eval_start=body.self_eval_start, self_eval_end=body.self_eval_end,
         manager_eval_end=body.manager_eval_end,
-        template_id=body.template_id, approval_chain=body.approval_chain,
+        approval_chain=body.approval_chain,
         status="running", created_by=user.id,
     )
     db.add(plan)
@@ -157,22 +156,89 @@ class TemplateCreate(BaseModel):
     dimensions: list[dict]
 
 
+class TemplateUpdate(BaseModel):
+    name: Optional[str] = None
+    type: Optional[str] = None
+    dimensions: Optional[list[dict]] = None
+
+
 @router.get("/templates")
-def list_templates(db: Session = Depends(get_db)):
-    stmt = select(EvalTemplate).order_by(EvalTemplate.created_at.desc())
+def list_templates(user: UserInfo = Depends(get_login_user), db: Session = Depends(get_db)):
+    """管理员可查看所有系统模板（只读）；普通员工仅查看自己的个人模板"""
+    from app.permissions import get_user_role, Role
+    role = get_user_role(user, db)
+    if role == Role.ADMIN:
+        stmt = select(EvalTemplate).order_by(EvalTemplate.created_at.desc())
+    else:
+        stmt = select(EvalTemplate).where(
+            EvalTemplate.created_by == user.id,
+            EvalTemplate.is_personal == True
+        ).order_by(EvalTemplate.created_at.desc())
     templates = db.execute(stmt).scalars().all()
     return [
-        {"id": t.id, "name": t.name, "type": t.type, "dimensions": t.dimensions_json, "is_default": t.is_default}
+        {"id": t.id, "name": t.name, "type": t.type, "dimensions": t.dimensions_json,
+         "is_default": t.is_default, "is_personal": t.is_personal, "created_by": t.created_by}
+        for t in templates
+    ]
+
+
+@router.get("/templates/mine")
+def list_my_templates(user: UserInfo = Depends(get_login_user), db: Session = Depends(get_db)):
+    """返回当前员工的个人模板列表"""
+    stmt = select(EvalTemplate).where(
+        EvalTemplate.created_by == user.id,
+        EvalTemplate.is_personal == True
+    ).order_by(EvalTemplate.created_at.desc())
+    templates = db.execute(stmt).scalars().all()
+    return [
+        {"id": t.id, "name": t.name, "type": t.type, "dimensions": t.dimensions_json,
+         "is_default": t.is_default, "is_personal": t.is_personal}
         for t in templates
     ]
 
 
 @router.post("/templates")
-def create_template(body: TemplateCreate, user: UserInfo = Depends(require_hr_user), db: Session = Depends(get_db)):
-    template = EvalTemplate(name=body.name, type=body.type, dimensions_json=body.dimensions, created_by=user.id)
+def create_template(body: TemplateCreate, user: UserInfo = Depends(require_any_user), db: Session = Depends(get_db)):
+    """任何登录员工均可创建个人模板"""
+    template = EvalTemplate(
+        name=body.name, type=body.type,
+        dimensions_json=body.dimensions,
+        created_by=user.id, is_personal=True
+    )
     db.add(template)
     db.flush()
     return {"id": template.id, "message": "模板已创建"}
+
+
+@router.put("/templates/{template_id}")
+def update_template(template_id: int, body: TemplateUpdate, user: UserInfo = Depends(require_any_user), db: Session = Depends(get_db)):
+    """仅模板创建者可编辑"""
+    template = db.execute(select(EvalTemplate).where(EvalTemplate.id == template_id)).scalar_one_or_none()
+    if not template:
+        raise HTTPException(404, "模板不存在")
+    if template.created_by != user.id:
+        raise HTTPException(403, "无权编辑他人模板")
+    if body.name is not None:
+        template.name = body.name
+    if body.type is not None:
+        template.type = body.type
+    if body.dimensions is not None:
+        template.dimensions_json = body.dimensions
+    db.flush()
+    return {"message": "模板已更新"}
+
+
+@router.delete("/templates/{template_id}")
+def delete_template(template_id: int, user: UserInfo = Depends(require_any_user), db: Session = Depends(get_db)):
+    """仅模板创建者可删除"""
+    template = db.execute(select(EvalTemplate).where(EvalTemplate.id == template_id)).scalar_one_or_none()
+    if not template:
+        raise HTTPException(404, "模板不存在")
+    if template.created_by != user.id:
+        raise HTTPException(403, "无权删除他人模板")
+    db.delete(template)
+    db.flush()
+    return {"message": "模板已删除"}
 
 
 # ── 数据概览 ──

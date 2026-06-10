@@ -87,14 +87,7 @@
             </van-cell-group>
           </van-checkbox-group>
 
-          <!-- 选择模板 -->
-          <van-field label="评估模板" required>
-            <template #input>
-              <select v-model="form.template_id" style="border:1px solid #eee;padding:4px 8px;border-radius:4px;width:100%;">
-                <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
-              </select>
-            </template>
-          </van-field>
+
 
           <div class="popup-actions">
             <van-button block type="primary" native-type="submit" round :loading="creating">创建计划</van-button>
@@ -108,19 +101,17 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getPlans, createPlan } from '../../api/plans'
-import { getTemplates } from '../../api/templates'
 import { showToast } from 'vant'
 
 const tab = ref('running')
 const plans = ref([])
-const templates = ref([])
 const showCreate = ref(false)
 const creating = ref(false)
 
 const form = ref({
   name: '', cycle_type: 'quarterly', start_date: '', end_date: '',
   self_eval_start: '', self_eval_end: '', manager_eval_end: '',
-  template_id: null, approval_chain: ['direct_leader', 'hr']
+  approval_chain: ['direct_leader', 'hr']
 })
 
 const runningPlans = computed(() => plans.value.filter(p => p.status === 'running'))
@@ -148,7 +139,7 @@ async function onCreatePlan() {
     await createPlan(payload)
     showToast({ message: '创建成功', type: 'success' })
     showCreate.value = false
-    form.value = { name: '', cycle_type: 'quarterly', start_date: '', end_date: '', self_eval_start: '', self_eval_end: '', manager_eval_end: '', template_id: null, approval_chain: ['direct_leader', 'hr'] }
+    form.value = { name: '', cycle_type: 'quarterly', start_date: '', end_date: '', self_eval_start: '', self_eval_end: '', manager_eval_end: '', approval_chain: ['direct_leader', 'hr'] }
     await loadPlans()
   } catch (e) {
     showToast(e.response?.data?.detail || '创建失败')
@@ -164,13 +155,7 @@ async function loadPlans() {
 }
 
 onMounted(async () => {
-  await Promise.all([loadPlans(), (async () => {
-    try {
-      const res = await getTemplates()
-      templates.value = res || []
-      if (templates.value.length > 0) form.value.template_id = templates.value[0].id
-    } catch (e) { /* ignore */ }
-  })()])
+  await loadPlans()
 })
 </script>
 
