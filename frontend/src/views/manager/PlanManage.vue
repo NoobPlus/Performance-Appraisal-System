@@ -138,9 +138,14 @@ async function onCreatePlan() {
     showToast('请填写必填项')
     return
   }
+  // 将空字符串转为 null，避免后端 DateTime 字段写入空字符串报错
+  const payload = { ...form.value }
+  if (!payload.self_eval_start) payload.self_eval_start = null
+  if (!payload.self_eval_end) payload.self_eval_end = null
+  if (!payload.manager_eval_end) payload.manager_eval_end = null
   creating.value = true
   try {
-    await createPlan(form.value)
+    await createPlan(payload)
     showToast({ message: '创建成功', type: 'success' })
     showCreate.value = false
     form.value = { name: '', cycle_type: 'quarterly', start_date: '', end_date: '', self_eval_start: '', self_eval_end: '', manager_eval_end: '', template_id: null, approval_chain: ['direct_leader', 'hr'] }

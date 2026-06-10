@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 import asyncio
 
@@ -30,6 +30,14 @@ class PlanCreate(BaseModel):
     template_id: int
     approval_chain: list[str]
     dept_ids: Optional[list[int]] = None
+
+    # 将空字符串转为 None，避免 DateTime 字段写入空字符串导致数据库报错
+    @field_validator('self_eval_start', 'self_eval_end', 'manager_eval_end', mode='before')
+    @classmethod
+    def empty_str_to_none(cls, v):
+        if v is None or (isinstance(v, str) and v.strip() == ''):
+            return None
+        return v
 
 
 @router.get("/plans")
