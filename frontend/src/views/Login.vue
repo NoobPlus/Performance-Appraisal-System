@@ -15,6 +15,9 @@
         <div class="login-tip">
           <p>请使用企业微信扫码或在企业微信中打开</p>
         </div>
+
+        <!-- 开发环境测试登录模块 -->
+        <dev-login-section v-if="isDevMode" :loading="devLoading" @login-success="handleLoginSuccess" />
       </div>
     </div>
   </div>
@@ -25,11 +28,16 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { setToken } from '../utils/auth'
 import { useUserStore } from '../stores/user'
+import DevLoginSection from '../components/DevLoginSection.vue'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const loading = ref(false)
+const devLoading = ref(false)
+
+// 检查是否为开发环境
+const isDevMode = import.meta.env.MODE === 'development'
 
 onMounted(() => {
   // 检查 URL 中是否有 token 参数（OAuth 回调后重定向过来的）
@@ -51,6 +59,11 @@ onMounted(() => {
 function handleLogin() {
   loading.value = true
   window.location.href = '/auth/login'
+}
+
+function handleLoginSuccess() {
+  // 开发登录成功后跳转首页
+  router.replace('/')
 }
 </script>
 

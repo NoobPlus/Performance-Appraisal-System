@@ -11,3 +11,11 @@ export function login() {
 export function logout() {
   return request.post('/auth/logout')
 }
+
+export function devLogin(testUserId) {
+  return request.post('/auth/dev-login', { test_user_id: testUserId })
+}
+
+export function getDevUsers() {
+  return request.get('/auth/dev-users')
+}

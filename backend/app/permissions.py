@@ -11,6 +11,7 @@ from typing import Callable
 from app.routers.auth import UserInfo, get_login_user
 from app.database import get_db
 from app.models import Employee
+from app.config import get_settings
 
 
 # 角色定义
@@ -21,8 +22,26 @@ class Role:
     ADMIN = "admin"            # 系统管理员
 
 
-# 管理员用户列表（企微userid）
-ADMIN_USERS = ["LiuYiHao"]
+def get_admin_users() -> list[str]:
+    """
+    获取管理员用户列表
+    从配置中心读取，支持多环境差异化配置
+    """
+    settings = get_settings()
+    admin_users = settings.get_admin_users()
+    # 开发环境默认返回空列表，生产环境必须配置
+    return admin_users
+
+
+def get_hr_users() -> list[str]:
+    """
+    获取HR人员列表
+    从配置中心读取，支持多环境差异化配置
+    当配置为空时返回空列表，业务逻辑层会回退到职位查询
+    """
+    settings = get_settings()
+    hr_users = settings.get_hr_users()
+    return hr_users
 
 
 def get_user_role(user: UserInfo, db: Session) -> str:
@@ -31,10 +50,13 @@ def get_user_role(user: UserInfo, db: Session) -> str:
     优先级：admin > hr > manager > employee
     """
     # 检查是否为管理员
-    if user.wecom_userid in ADMIN_USERS:
+    if user.wecom_userid in get_admin_users():
         return Role.ADMIN
 
-    # 检查是否为HR（可以通过部门名称或职位判断）
+    # 检查是否为HR（支持配置化和职位匹配两种方式）
+    hr_users = get_hr_users()
+    if hr_users and user.wecom_userid in hr_users:
+        return Role.HR
     if user.position and ("hr" in user.position.lower() or "人力" in user.position):
         return Role.HR
 

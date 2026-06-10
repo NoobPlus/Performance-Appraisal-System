@@ -30,6 +30,43 @@ class UserInfo(BaseModel):
     role: str = "employee"  # employee / manager / hr / admin
 
 
+class DevLoginRequest(BaseModel):
+    test_user_id: str
+
+
+# 开发测试账号映射
+DEV_USERS: dict[str, dict] = {
+    "test_admin": {
+        "id": 999999,
+        "name": "开发-管理员",
+        "wecom_userid": "dev_admin",
+        "position": "系统管理员",
+        "level": "T9",
+    },
+    "test_hr": {
+        "id": 999998,
+        "name": "开发-HR",
+        "wecom_userid": "dev_hr",
+        "position": "HR专员",
+        "level": "T7",
+    },
+    "test_manager": {
+        "id": 999997,
+        "name": "开发-经理",
+        "wecom_userid": "dev_manager",
+        "position": "部门经理",
+        "level": "T8",
+    },
+    "test_employee": {
+        "id": 999996,
+        "name": "开发-员工",
+        "wecom_userid": "dev_employee",
+        "position": "软件工程师",
+        "level": "T6",
+    },
+}
+
+
 def _build_oauth_url(redirect_uri: str, state: str) -> str:
     return (
         f"https://open.weixin.qq.com/connect/oauth2/authorize"
@@ -277,3 +314,99 @@ async def logout(request: Request):
     response = JSONResponse(content={"message": "已退出"})
     response.delete_cookie("token")
     return response
+
+
+# ── 开发环境测试登录 ──
+
+@router.post("/dev-login")
+async def dev_login(request: DevLoginRequest, db: Session = Depends(get_db)):
+    """开发环境测试登录接口（仅开发模式可用）"""
+    from fastapi.responses import JSONResponse
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    # 环境校验：禁止生产环境使用
+    if not settings.DEV_MODE:
+        raise HTTPException(
+            status_code=403,
+            detail="测试登录仅在开发环境可用，请设置 DEV_MODE=true"
+        )
+
+    test_user_id = request.test_user_id
+    if test_user_id not in DEV_USERS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"无效的测试账号: {test_user_id}。可用账号: {list(DEV_USERS.keys())}"
+        )
+
+    user_data = DEV_USERS[test_user_id]
+
+    # 创建测试用户记录（如果不存在）
+    stmt = select(Employee).where(Employee.wecom_userid == user_data["wecom_userid"])
+    employee = db.execute(stmt).scalar_one_or_none()
+
+    if not employee:
+        # 获取或创建开发部门
+        dev_dept_stmt = select(Department).where(Department.id == 999)
+        dept = db.execute(dev_dept_stmt).scalar_one_or_none()
+        if not dept:
+            dept = Department(id=999, name="开发测试部门")
+            db.add(dept)
+            db.flush()
+
+        # 创建测试员工
+        employee = Employee(
+            id=user_data["id"],
+            name=user_data["name"],
+            wecom_userid=user_data["wecom_userid"],
+            dept_id=999,
+            position=user_data["position"],
+            level=user_data["level"],
+            status="active",
+        )
+        db.add(employee)
+        db.flush()
+
+    # 确定角色（基于配置和职位）
+    from app.permissions import get_user_role, Role
+    temp_user = UserInfo(
+        id=employee.id,
+        name=employee.name,
+        wecom_userid=employee.wecom_userid,
+        dept_id=employee.dept_id,
+        dept_name="开发测试部门",
+        position=employee.position,
+        level=employee.level,
+        avatar=employee.avatar,
+        role="employee",
+    )
+    role = get_user_role(temp_user, db)
+
+    # 构建用户信息并创建会话
+    user = UserInfo(
+        id=employee.id,
+        name=employee.name,
+        wecom_userid=employee.wecom_userid,
+        dept_id=employee.dept_id,
+        dept_name="开发测试部门",
+        position=employee.position,
+        level=employee.level,
+        avatar=employee.avatar,
+        role=role,
+    )
+    token = _create_session(user)
+    logger.info(f"开发测试登录成功: {test_user_id} -> {employee.name} ({role})")
+
+    return JSONResponse(content={"token": token})
+
+
+@router.get("/dev-users")
+async def get_dev_users():
+    """获取可用的测试账号列表（仅开发模式可用）"""
+    if not settings.DEV_MODE:
+        raise HTTPException(
+            status_code=403,
+            detail="测试登录仅在开发环境可用"
+        )
+    return list(DEV_USERS.keys())

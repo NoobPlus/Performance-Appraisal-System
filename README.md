@@ -223,6 +223,39 @@ npm run build
 - `WECOM_SECRET`: 应用 Secret
 - `APP_SECRET_KEY`: 应用密钥（用于 JWT 签名）
 - `APP_BASE_URL`: 应用访问地址
+- `ADMIN_USERS`: 管理员用户列表，企业微信userid逗号分隔（推荐配置）
+- `HR_USERS`: HR人员列表，企业微信userid逗号分隔（推荐配置）
+
+## ADMIN_USERS 配置说明
+
+**格式要求**：逗号分隔的企业微信用户ID列表，如 `user1,user2,user3`
+
+**取值示例**：
+- 单个管理员：`ADMIN_USERS=LiuYiHao`
+- 多个管理员：`ADMIN_USERS=user1,user2,user3`
+
+**注意**：
+- 该配置为空时，将不会有管理员权限用户
+- 生产环境务必配置，否则系统管理员功能不可用
+- 用户ID需与企业微信用户的 `wecom_userid` 字段一致
+
+## HR_USERS 配置说明
+
+**格式要求**：逗号分隔的企业微信用户ID列表，如 `hr_user1,hr_user2`
+
+**取值示例**：
+- 单个HR：`HR_USERS=hr_user1`
+- 多个HR：`HR_USERS=hr1,hr2,hr3`
+
+**工作机制**：
+- 当配置后，HR身份判定优先基于此列表
+- 当配置为空时，系统自动查询员工职位字段包含"HR"或"人力"的员工
+- 两种方式可共存，配置优先于职位匹配
+
+**注意**：
+- 配置后可精确控制HR人员身份，避免职位变更导致的权限误判
+- 用于HR终审、数据导出、员工管理等HR专属功能
+- 用户ID需与企业微信用户的 `wecom_userid` 字段一致
 
 ## 安全建议
 

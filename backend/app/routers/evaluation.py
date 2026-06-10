@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 from app.database import get_db
 from app.models import AssessmentRecord, AssessmentPlan, EvalDetail, ApprovalLog, Employee, EvalTemplate, Department, RecordStatus
@@ -10,6 +10,25 @@ from app.routers.auth import UserInfo, get_login_user
 from app.services.wecom import wecom_service
 from app.config import get_settings
 from app.permissions import require_hr_user
+
+
+def get_hr_userids(db: Session) -> List[str]:
+    """
+    获取HR用户ID列表
+    优先从配置读取，其次从职位查询
+    """
+    from app.permissions import get_hr_users
+    hr_config_users = get_hr_users()
+    if hr_config_users:
+        return hr_config_users
+
+    # 回退到职位查询
+    hr_users = db.execute(
+        select(Employee).where(
+            Employee.position.like('%HR%') | Employee.position.like('%人力%')
+        )
+    ).scalars().all()
+    return [hr.wecom_userid for hr in hr_users] if hr_users else []
 
 router = APIRouter(prefix="/api/eval", tags=["评估"])
 settings = get_settings()
@@ -114,20 +133,15 @@ async def submit_manager_eval(body: ManagerEvalSubmit, user: UserInfo = Depends(
         record.current_step = "hr_final"
         # 通知HR进行终审
         try:
-            # 查找所有HR用户
-            from app.permissions import Role
-            hr_users = db.execute(
-                select(Employee).where(
-                    Employee.position.like('%HR%') | Employee.position.like('%人力%')
-                )
-            ).scalars().all()
+            # 获取HR用户ID列表（优先配置，其次职位查询）
+            hr_userids = get_hr_userids(db)
 
             emp = db.execute(select(Employee).where(Employee.id == record.employee_id)).scalar_one_or_none()
-            if emp and hr_users:
-                for hr_user in hr_users[:3]:  # 最多通知3个HR
+            if emp and hr_userids:
+                for hr_userid in hr_userids[:3]:  # 最多通知3个HR
                     try:
                         await wecom_service.send_textcard(
-                            touser=hr_user.wecom_userid,
+                            touser=hr_userid,
                             title="新考核待终审",
                             description=f"{emp.name} 的考核已完成上级评估，请进行HR终审",
                             url=f"{settings.APP_BASE_URL}/hr/review"
@@ -248,10 +262,10 @@ def get_approval_logs(record_id: int, user: UserInfo = Depends(get_login_user), 
     if employee and employee.direct_leader_id:
         manager = db.execute(select(Employee).where(Employee.id == employee.direct_leader_id)).scalar_one_or_none()
 
-    # 获取所有HR用户（用于显示HR名称）
+    # 获取HR用户列表（用于显示HR名称）
     hr_users = db.execute(
         select(Employee).where(
-            Employee.position.like('%HR%') | Employee.position.like('%人力%')
+            Employee.wecom_userid.in_(get_hr_userids(db))
         )
     ).scalars().all()
     hr_names = [hr.name for hr in hr_users] if hr_users else []

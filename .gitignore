@@ -102,5 +102,5 @@ nginx*.zip
 .graphify_chunk_*.txt
 .graphify_uncached.txt
 .graphify_python
-
-graphify-out/
+.trae/
+.codex/
